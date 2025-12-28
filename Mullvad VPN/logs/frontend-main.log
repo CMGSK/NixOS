@@ -1,0 +1,12 @@
+[2025-12-21 00:32:32.201][verbose] Chromium sandbox is enabled
+[2025-12-21 00:32:32.203][info] Running version 2025.13
+[2025-12-21 00:32:32.312][info] Detected locale: en-US
+[2025-12-21 00:32:32.485][error] Error while retrieving theme {"code":127,"killed":false,"signal":null,"cmd":"gsettings get org.gnome.desktop.interface icon-theme"}
+[2025-12-21 00:32:32.494][info] Verified socket ownership
+[2025-12-21 00:32:32.494][info] Connected to the daemon
+[2025-12-21 00:32:32.612][info] Autoconnect the tunnel
+[2025-12-21 00:32:33.705][error] Failed to check autostart file: ENOENT: no such file or directory, access '/home/aria/.config/autostart/mullvad-vpn.desktop'
+[2025-12-21 00:34:56.615][verbose] GRPC Channel connectivity state changed to 0
+[2025-12-21 00:34:56.616][info] Disconnected from the daemon
+[2025-12-21 00:34:56.623][info] before-quit received
+[2025-12-21 00:34:56.624][info] Quit initiated
