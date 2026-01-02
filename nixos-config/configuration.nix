@@ -11,13 +11,19 @@
     ./hardware-configuration.nix
   ];
   
-  boot.loader.systemd-boot.enable = true;
+  #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.useOSProber = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelModules = [
+    "ntsync"
+  ];
 
-  networking.hostName = "planetes";
+  networking.hostName = "crypton";
   networking.networkmanager.enable = true;
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Madrid";
@@ -32,8 +38,17 @@
     };
   };
 
-fonts = {
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ 
+      "noto-fonts"
+      "corefonts"
+    ];
+
+  fonts = {
+    fontDir.enable = true;
+
     packages = with pkgs; [
+      corefonts
       noto-fonts
       nerd-fonts.jetbrains-mono
       noto-fonts-cjk-sans
@@ -53,6 +68,7 @@ fonts = {
 #      };
 #    };
   };  
+
 
   security.rtkit.enable = true;
 
@@ -78,6 +94,12 @@ fonts = {
     };
 
     displayManager.gdm.enable = true;
+
+    desktopManager.gnome.enable = true;
+    gnome.core-apps.enable = false;
+    gnome.core-developer-tools.enable = false;
+    gnome.games.enable = false;
+
     upower.enable = true;
     xserver.enable = true;
   };
@@ -87,31 +109,66 @@ fonts = {
     platformTheme = "qt5ct";
   };
 
-  users.users.aria = {
+  users.users.miku = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
   };
 
   environment.systemPackages = with pkgs; [
+    gnome-keyring
     neovim
     vim
     xwayland-satellite
-    mako
+    #mako
     swaylock
     wl-clipboard
     fuzzel
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    gnome-user-docs
+  ];
+
   system.stateVersion = "26.05";
 
   nix = {
+     gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
     settings = {
+      auto-optimise-store = true;
+
+      trusted-users = [
+        "root"
+        "miku"
+      ];
+
       experimental-features = [
         "nix-command"
         "flakes"
+        "ca-derivations"
       ];
+      warn-dirty = false;
+
+      # Binary caches
+      substituters = [
+        "https://cache.nixos.org/"
+        "https://cache.garnix.io/"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      ];
+
+      # Avoid unwanted garbage collection when using nix-direnv
+      keep-outputs = true;
+      keep-derivations = true;
     };
   };
 }

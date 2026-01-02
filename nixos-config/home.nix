@@ -1,12 +1,29 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 
+let
+  krisp-patcher = pkgs.callPackage ./krisp-patcher.nix { };
+in
+
 {
-  home.username = "aria";
-  home.homeDirectory = "/home/aria";
+  home.username = "miku";
+  home.homeDirectory = "/home/miku";
   home.packages = with pkgs; [
+    woeusb
+    nur.repos.Ev357.helium
+    krisp-patcher
+    brave
+    inputs.nixohess.packages.${pkgs.stdenv.hostPlatform.system}.stremio-linux-shell
+    input-leap
+    onlyoffice-desktopeditors
+    youtube-music
+    qbittorrent
+    #rustdesk
+    obs-studio
+    bruno
     spaceship-prompt
     p7zip
     nwg-look
@@ -21,7 +38,6 @@
     ghostty
     libsForQt5.qt5ct
     kdePackages.qt6ct
-    nur.repos.Ev357.helium
     zsh
   ];
 
@@ -38,6 +54,8 @@
 	"cd.." = "cd ..";
 	":q" = "exit";
 	ni = "cd /etc/nixos";
+	unzip = "7z x ";
+	zip = "7z a ";
       };
 
       oh-my-zsh = {

@@ -16,11 +16,16 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixohess = {
+  	url = "gitlab:fazzi/nixohess";
+  	inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = inputs@{ self, nixpkgs, ... }: 
   {
-    nixosConfigurations.planetes = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.crypton = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
@@ -30,7 +35,8 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.aria = import ./home.nix;
+	    extraSpecialArgs = { inherit inputs; };
+            users.miku = import ./home.nix;
             backupFileExtension = "backup";
           };
         }
